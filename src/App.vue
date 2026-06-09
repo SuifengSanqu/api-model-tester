@@ -36,8 +36,12 @@ const handlePresetChange = () => {
   }
 }
 
+const isProduction = window.location.hostname !== 'localhost'
+
 const getUrl = (path) => {
-  if (useLocalProxy.value) {
+  // 生产环境自动使用同源代理，开发环境根据选项决定
+  const shouldUseProxy = isProduction || useLocalProxy.value
+  if (shouldUseProxy) {
     return `/api/${path}`
   }
   let url = apiBase.value.endsWith('/') ? apiBase.value + path : apiBase.value + '/' + path
