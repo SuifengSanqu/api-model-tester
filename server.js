@@ -1,11 +1,13 @@
 import express from 'express'
 import cors from 'cors'
+import { createServer as createViteServer } from 'vite'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
-import { readFileSync } from 'fs'
+import { existsSync } from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+const isProduction = process.env.NODE_ENV === 'production'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -16,13 +18,9 @@ app.use(express.urlencoded({ extended: true }))
 
 // 代理 API 请求
 app.use('/api', async (req, res) => {
-  // req.originalUrl: /api/models or /api/chat/completions
-  const apiPath = req.originalUrl.replace(/^\/api/, '') // /models or /chat/completions
+  const apiPath = req.originalUrl.replace(/^\/api/, '')
   
-  // Get target base from header, default to volcano
   let targetBase = req.headers['x-target-base'] || 'https://ark.cn-beijing.volces.com'
-  
-  // Remove trailing slash from base
   targetBase = targetBase.replace(/\/$/, '')
   
   const targetUrl = targetBase + apiPath
@@ -53,20 +51,43 @@ app.use('/api', async (req, res) => {
     
     const response = await fetch(targetUrl, fetchOptions)
     const data = await response.json()
-    res.json(data)
+    
+    res.status(response.status).json(data)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// 服务静态文件（生产环境）
-app.use(express.static(join(__dirname, 'dist')))
-
-// 所有其他请求返回 index.html（SPA 路由）
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'))
-})
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+if (isProduction) {
+  // 生产环境：服务静态文件
+  const distPath = join(__dirname, 'dist')
+  
+  if (existsSync(distPath)) {
+    app.use(express.static(distPath))
+    
+    app.get('*', (req, res) => {
+      res.sendFile(join(distPath, 'index.html'))
+    })
+    
+    app.listen(PORT, () => {
+      console.log(`Production server running on port ${PORT}`)
+    })
+  } else {
+    console.error('dist directory not found!')
+    process.exit(1)
+  }
+} else {
+  // 开发环境：使用 Vite 中间件
+  const createViteServer = (await import('vite')).createServer
+  
+  const vite = await createViteServer({
+    server: { middlewareMode: true },
+    appType: 'spa'
+  })
+  
+  app.use(vite.middlewares)
+  
+  app.listen(PORT, () => {
+    console.log(`Development server running on port ${PORT}`)
+  })
+}
