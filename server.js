@@ -65,7 +65,8 @@ if (isProduction) {
   if (existsSync(distPath)) {
     app.use(express.static(distPath))
     
-    app.get('*', (req, res) => {
+    // Express 5 需要使用正则表达式匹配所有路由
+    app.get(/(.*)/, (req, res) => {
       res.sendFile(join(distPath, 'index.html'))
     })
     
