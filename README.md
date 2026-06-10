@@ -1,41 +1,80 @@
-# Vue 3 + Vite
+Model Tester - API 连通性测试工具
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+一个轻量级工具，用于测试你 API Key 下所有模型的真实可用性。帮你快速识别出被平台隐藏、废弃或无权访问的无效模型，避免在开发中浪费时间。
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
-# Model Tester - API Connectivity Test Tool
+🚀 快速开始
 
-## Overview
+你可以直接使用以下两个在线部署地址（无需安装任何软件）：
 
-With the rapid growth of LLM APIs, developers often find themselves managing multiple API keys from different providers. Many free-tier platforms display a long list of available models, but in practice:
+•   🌏 国内无需魔法（Render 部署）
 
-- Some models are deprecated but still listed
-- Some require special permissions not included in your current tier
-- Some are simply unavailable due to regional restrictions or quota limits
+    👉 https://api-model-tester.onrender.com/
+    ⚠️ 注意：若长时间无人使用，第一次冷启动约需 5 秒。
 
-This tool solves that problem by testing each model under your API key and reporting its real-time availability.
+•   🚀 需要魔法（Cloudflare Workers 部署）
 
-## Features
+    👉 https://api-model-tester.wu806634053-84b.workers.dev/
+    ✅ 优势：任何时间访问都无冷启动延迟。
 
-- 🔍 Auto-detect all models under a given API endpoint
-- ✅ Test connectivity with real requests
-- 📊 Clear pass/fail results with response time
-- 🆓 Free to use (self-hosted)
-- 🌐 Works with OpenAI-compatible APIs
+💡 为什么需要这个工具？
 
-## How It Works
+随着各大厂商推出免费或试用的大模型 API，开发者往往会积累很多平台的 Key。但实际情况是：
+•   平台后台列出了几十个模型，但很多只是展示，实际调用会报错。
 
-1. Enter your API base URL and key
-2. The tool fetches the model list from `/v1/models`
-3. For each model, it sends a minimal test request
-4. Results are displayed — green for working, red for failed
+•   有些模型需要特定的权限，普通 Key 无法调用。
 
-## Tech Stack
+•   手动一个个试错非常耗时且消耗额度。
 
-- Frontend: HTML + CSS + JavaScript
-- Backend: Node.js (Express)
-- Deployment: Render
+本工具就是为了解决这个痛点，只需输入你的 Endpoint 和 Key，一键扫描并告诉你哪些模型是真正能用的。
 
-## Self-Hosting
+✨ 功能特性
 
-Fork this repo → connect to Render → done.
+•   多平台支持：内置 OpenAI、Anthropic (Claude)、Google Gemini、火山引擎（豆包）、阿里云、百度智能云、Azure 等常用平台选项。
+
+•   自定义兼容：支持填写任意 OpenAI 兼容或 Claude 兼容的 API 地址（如本地部署的 LM Studio、Ollama 等）。
+
+•   智能代理：针对火山引擎、百度等国内 API，提供本地代理转发功能，解决浏览器跨域（CORS）限制。
+
+•   隐私安全：你的 API Key 仅保存在浏览器本地，永远不会被发送到任何第三方服务器。
+
+•   极简界面：专注于测试功能，操作简单，结果一目了然。
+
+🛠️ 如何使用
+
+1.  选择平台：在“API 配置”下拉菜单中选择你的服务商，或选择“自定义”。
+2.  填写信息：
+    ◦   API 端点：填入你的 API Base URL。
+
+    ◦   API Key：填入你的密钥。
+
+    ◦   API 类型：根据你的 Key 类型选择 OpenAI 兼容或 Claude 兼容。
+
+3.  启动代理（可选）：如果你使用的是火山引擎、百度等国内服务，请勾选“启用本地代理服务”。
+4.  获取模型列表：点击“获取模型列表”按钮。
+5.  查看结果：页面会自动列出所有模型，并标明它们是否可用（Pass/Fail）及响应速度。
+
+📋 本地开发
+
+如果你想在本地运行或修改代码：
+# 克隆仓库
+git clone https://github.com/你的用户名/model-tester.git
+cd model-tester
+
+# 安装依赖
+npm install
+
+# 启动本地服务
+npm run dev
+
+
+📄 许可证 (License)
+
+MIT License
+
+🙋♂️ 关于作者
+
+•   GitHub: https://github.com/你的用户名
+
+•   邮箱: [你的邮箱@example.com]
+
+(注：请将 你的用户名 和 你的邮箱@example.com 替换为你自己的信息)
