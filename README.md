@@ -56,9 +56,6 @@ Model Tester - API 连通性测试工具
 📋 本地开发
 
 如果你想在本地运行或修改代码：
-# 克隆仓库
-git clone https://github.com/你的用户名/model-tester.git
-cd model-tester
 
 # 安装依赖
 npm install
@@ -66,15 +63,14 @@ npm install
 # 启动本地服务
 npm run dev
 
-
 📄 许可证 (License)
 
 MIT License
 
 🙋♂️ 关于作者
 
-•   GitHub: https://github.com/你的用户名
+•   GitHub:https://github.com/SuifengSanqu
 
-•   邮箱: [你的邮箱@example.com]
+•  如有任何想增加的功能或者反馈的信息，请给我留言。
 
-(注：请将 你的用户名 和 你的邮箱@example.com 替换为你自己的信息)
+
