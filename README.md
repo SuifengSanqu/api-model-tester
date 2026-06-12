@@ -20,7 +20,7 @@
 
 ### 1. (Render 部署)
 👉 **[https://api.maxbox.ccwu.cc/)**
-> ⚠️ **注意**：若长时间无人使用，第一次冷启动约需 5 秒。
+> ⚠️ **注意**：若长时间无人使用，第一次冷启动约需 6 秒。
 
 ### 2. (Cloudflare Workers 部署)
 👉 **[https://app.maxbox.ccwu.cc/)**
