@@ -1,8 +1,8 @@
 export async function onRequest(context) {
-  const { request, env } = context
+  const { request } = context
   const url = new URL(request.url)
   
-  // 处理 CORS 预检请求（OPTIONS）
+  // CORS 预检
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -14,21 +14,14 @@ export async function onRequest(context) {
     })
   }
   
-  // 获取 API 路径
   const apiPath = url.pathname.replace(/^\/api/, '')
   
-  // 从请求头获取目标 API 地址
-  let targetBase = request.headers.get('x-target-base')
-  if (!targetBase) {
-    targetBase = 'https://ark.cn-beijing.volces.com'
-  }
+  let targetBase = request.headers.get('x-target-base') || 'https://ark.cn-beijing.volces.com'
   targetBase = targetBase.replace(/\/$/, '')
   
   const targetUrl = targetBase + apiPath
   
-  // 构建转发请求头
-  const headers = new Headers()
-  headers.set('Content-Type', 'application/json')
+  const headers = new Headers({ 'Content-Type': 'application/json' })
   
   if (request.headers.has('authorization')) {
     headers.set('Authorization', request.headers.get('authorization'))
@@ -40,37 +33,26 @@ export async function onRequest(context) {
     headers.set('anthropic-version', request.headers.get('anthropic-version'))
   }
   
-  // 构建请求体
   let body = null
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     body = await request.text()
   }
   
   try {
-    const response = await fetch(targetUrl, {
-      method: request.method,
-      headers,
-      body
-    })
-    
+    const response = await fetch(targetUrl, { method: request.method, headers, body })
     const data = await response.json()
     
     return new Response(JSON.stringify(data), {
       status: response.status,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key, anthropic-version, x-target-base'
+        'Access-Control-Allow-Origin': '*'
       }
     })
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     })
   }
 }
