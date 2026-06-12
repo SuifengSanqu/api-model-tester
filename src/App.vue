@@ -58,7 +58,8 @@ const getFetchOptions = (headers, method = 'GET', body = undefined) => {
     options.body = body
   }
   
-  if (useLocalProxy.value) {
+  // 生产环境或勾选代理时，需要设置目标地址头
+  if (isProduction || useLocalProxy.value) {
     headers['x-target-base'] = apiBase.value
   }
   
