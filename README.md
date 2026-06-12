@@ -18,11 +18,11 @@
 
 你可以直接使用以下两个在线部署地址（无需安装任何软件）：
 
-### 1. 国内无需魔法 (Render 部署)
+### 1. (Render 部署)
 👉 **[https://api.maxbox.ccwu.cc/)**
 > ⚠️ **注意**：若长时间无人使用，第一次冷启动约需 5 秒。
 
-### 2. 需要魔法 (Cloudflare Workers 部署)
+### 2. (Cloudflare Workers 部署)
 👉 **[https://app.maxbox.ccwu.cc/)**
 > ✅ **优势**：任何时间访问都无冷启动延迟，速度极快。
 
